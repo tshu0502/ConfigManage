@@ -224,11 +224,9 @@ namespace ConfigManage
                 {
                     tn = FocusedControl.Nodes.Add(f.HostName.Text.ToString());
                 }
-
                 //親ノードにドライブを設定
                 SessionOptions current_sessionOptions = new SessionOptions();
                 LinNodeTag linnodetag = new LinNodeTag();
-
                 try
                 {
                     Cursor.Current = Cursors.WaitCursor;
@@ -298,51 +296,130 @@ namespace ConfigManage
             if (f.ShowDialog(this) == DialogResult.OK)
             {
                 TreeNode tn = RemoteFilemanagerView.Nodes.Add(f.HostName.Text), tn2;                            //tn;新たなノードを追加
+                Cursor.Current = Cursors.WaitCursor;
 
-                SessionOptions current_sessionOptions = new SessionOptions(); //親ノードにドライブを設定
-                LinNodeTag linnodetag = new LinNodeTag();
-
-                try
+                if (f.Platform_Linux.Checked)
                 {
-                    Cursor.Current = Cursors.WaitCursor;
+                    SessionOptions current_sessionOptions = new SessionOptions(); //親ノードにドライブを設定
+                    LinNodeTag linnodetag = new LinNodeTag();
 
-                    linnodetag.HostName = f.HostName.Text;
-                    linnodetag.UserName = f.UserName.Text;
-                    linnodetag.PassWord = f.Password.Text;
-                    linnodetag.PortNo = int.Parse(f.PortNo.Text);
-                    linnodetag.FtpMode = f.passivemode;
-                    linnodetag.InputSessionOptions(current_sessionOptions);
-                    tn.Tag = linnodetag;
-
-                    // sessionの作成
-                    sessionid = RemoteFilemanagerView.Nodes.Count - 1;
-                    current_session[sessionid] = new Session();
-                    current_session[sessionid].Open(current_sessionOptions);
-
-                    RemoteDirectoryInfo directory = current_session[sessionid].ListDirectory("/");
-                    foreach (RemoteFileInfo fileInfo in directory.Files)
+                    try
                     {
-                        if (fileInfo.IsDirectory && !fileInfo.IsParentDirectory && !fileInfo.IsThisDirectory)
+                        Cursor.Current = Cursors.WaitCursor;
+
+                        linnodetag.HostName = f.HostName.Text;
+                        linnodetag.UserName = f.UserName.Text;
+                        linnodetag.PassWord = f.Password.Text;
+                        linnodetag.PortNo = int.Parse(f.PortNo.Text);
+                        linnodetag.FtpMode = f.passivemode;
+                        linnodetag.InputSessionOptions(current_sessionOptions);
+                        tn.Tag = linnodetag;
+
+                        // sessionの作成
+                        sessionid = RemoteFilemanagerView.Nodes.Count - 1;
+                        current_session[sessionid] = new Session();
+                        current_session[sessionid].Open(current_sessionOptions);
+
+                        RemoteDirectoryInfo directory = current_session[sessionid].ListDirectory("/");
+                        foreach (RemoteFileInfo fileInfo in directory.Files)
                         {
-                            tn2 = new TreeNode(fileInfo.Name, 3, 3);
-                            tn.Nodes.Add(tn2);
-                            tn2.Nodes.Add("..");
+                            if (fileInfo.IsDirectory && !fileInfo.IsParentDirectory && !fileInfo.IsThisDirectory)
+                            {
+                                tn2 = new TreeNode(fileInfo.Name, 3, 3);
+                                tn.Nodes.Add(tn2);
+                                tn2.Nodes.Add("..");
+                            }
                         }
                     }
+                    //                return 0;
+                    catch (Exception msg)
+                    {
+                        ConsoleText.Text = msg.Message;
+                    }
+                    sessionid++;
                 }
-                //                return 0;
-                catch (Exception msg)
+                //Windowsの場合
+                else if (f.Platform_Windows.Checked)
                 {
-                    ConsoleText.Text = msg.Message;
+                    WinNodeTag winnodetag = new WinNodeTag();
+
+                    winnodetag.HostName = f.HostName.Text;
+                    winnodetag.UserName = f.UserName.Text;
+                    winnodetag.PassWord = f.Password.Text;
+                    tn.Tag = winnodetag;
+                    /*
+                                        ConnectionOptions option = new ConnectionOptions();
+                                        option.Username = "DomainName\\UserName";
+                                        option.Password = "パスワードを入れる";
+                                        ManagementScope scope = new ManagementScope("\\\\ServerName\\root\\cimv2", option);
+                                        ObjectQuery query = new ObjectQuery("SELECT * FROM Win32_Processor");
+                                        ManagementObjectSearcher searcher = new ManagementObjectSearcher(scope, query);
+                                        ManagementObjectCollection moCollection = searcher.Get();
+
+                                        foreach (ManagementObject mo in moCollection)
+                                        {
+                                            Console.WriteLine("Name:\t{0}", mo["Name"]);
+                                        }
+                                        try
+                                        {
+                                            //とりあえずコピーできるかやってみる
+                                            File.Delete(destFilePath);
+                                            File.Copy(sourceFilePath, destFilePath);
+                                        }
+
+                                        //認証に失敗すると UnauthorizedAccessException が発生する(Exceptionでキャッチしてもいいかも)
+                                        catch (UnauthorizedAccessException)
+                                        {
+                                            // 接続情報を設定  
+                                            NETRESOURCE netResource = new NETRESOURCE();
+                                            netResource.dwScope = 0;
+                                            netResource.dwType = 1;
+                                            netResource.dwDisplayType = 0;
+                                            netResource.dwUsage = 0;
+                                            netResource.lpLocalName = ""; // ネットワークドライブにする場合は"z:"などドライブレター設定  
+                                            netResource.lpRemoteName = shareName;
+                                            netResource.lpProvider = "";
+                                            string password = "ness7591";
+                                            string userId = "takamure";
+                    //                        string password = winnodetag.PassWord;
+                    //                        string userId = @winnodetag.UserName;
+                                            int ret = 0;
+
+                                            try
+                                            {
+                                                //既に接続してる場合があるので一旦切断する
+                                                ret = WNetCancelConnection2(shareName, 0, true);
+                                                //共有フォルダに認証情報を使って接続
+                                                ret = WNetAddConnection2(ref netResource, "ness7591", "takamure", 0);
+                                            }
+                                            catch (Exception)
+                                            {
+                                                //エラー処理
+                                            }
+
+                                            string[] dri = Environment.GetLogicalDrives();//ドライブ名を取得
+                                            foreach (string d in dri)
+                                            {
+                                                TreeNode childnode = new TreeNode(d, 1, 1);
+                                                childnode.Nodes.Add("..");//架空の枝を追加
+                                                tn.Nodes.Add(childnode);//ノードライブアイコンを設定
+                                            }
+                                            LocalFileView.Nodes.Add(tn);//親ノードにドライブを設定
+
+                                            Console.WriteLine(ret);
+
+                                            //ファイルコピー
+                                            File.Delete(destFilePath);
+                                            File.Copy(sourceFilePath, destFilePath);
+                                        }
+                                        Console.WriteLine("終了");
+                                        Console.ReadLine();
+                                    }*/
                 }
-                finally
-                {
-                    Cursor.Current = Cursors.Arrow;
-                }
-                sessionid++;
+
+                Cursor.Current = Cursors.Arrow;
             }
         }
-
         //コンテキストメニューファイルグループの追加
         private void add_filegroup_ToolStripMenuItem_Click(object sender, EventArgs e)
         {

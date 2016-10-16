@@ -39,7 +39,11 @@
             this.Chk_Passive = new System.Windows.Forms.CheckBox();
             this.label4 = new System.Windows.Forms.Label();
             this.PortNo = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.ConnectTest = new System.Windows.Forms.Button();
+            this.Platform_Linux = new System.Windows.Forms.RadioButton();
+            this.Platform_Windows = new System.Windows.Forms.RadioButton();
+            this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.groupBox1.SuspendLayout();
             this.SuspendLayout();
             // 
             // HostName
@@ -103,7 +107,7 @@
             // OK
             // 
             this.OK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.OK.Location = new System.Drawing.Point(139, 290);
+            this.OK.Location = new System.Drawing.Point(138, 389);
             this.OK.Name = "OK";
             this.OK.Size = new System.Drawing.Size(123, 37);
             this.OK.TabIndex = 1;
@@ -114,7 +118,7 @@
             // Cancel
             // 
             this.Cancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.Cancel.Location = new System.Drawing.Point(268, 290);
+            this.Cancel.Location = new System.Drawing.Point(267, 389);
             this.Cancel.Name = "Cancel";
             this.Cancel.Size = new System.Drawing.Size(123, 37);
             this.Cancel.TabIndex = 7;
@@ -150,21 +154,55 @@
             this.PortNo.TabIndex = 11;
             this.PortNo.Text = "21";
             // 
-            // button1
+            // ConnectTest
             // 
-            this.button1.Location = new System.Drawing.Point(17, 290);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(116, 37);
-            this.button1.TabIndex = 12;
-            this.button1.Text = "接続テスト";
-            this.button1.UseVisualStyleBackColor = true;
+            this.ConnectTest.Location = new System.Drawing.Point(16, 389);
+            this.ConnectTest.Name = "ConnectTest";
+            this.ConnectTest.Size = new System.Drawing.Size(116, 37);
+            this.ConnectTest.TabIndex = 12;
+            this.ConnectTest.Text = "接続テスト";
+            this.ConnectTest.UseVisualStyleBackColor = true;
+            // 
+            // Platform_Linux
+            // 
+            this.Platform_Linux.AutoSize = true;
+            this.Platform_Linux.Checked = true;
+            this.Platform_Linux.Location = new System.Drawing.Point(6, 28);
+            this.Platform_Linux.Name = "Platform_Linux";
+            this.Platform_Linux.Size = new System.Drawing.Size(84, 26);
+            this.Platform_Linux.TabIndex = 14;
+            this.Platform_Linux.TabStop = true;
+            this.Platform_Linux.Text = "Linux";
+            this.Platform_Linux.UseVisualStyleBackColor = true;
+            // 
+            // Platform_Windows
+            // 
+            this.Platform_Windows.AutoSize = true;
+            this.Platform_Windows.Location = new System.Drawing.Point(6, 60);
+            this.Platform_Windows.Name = "Platform_Windows";
+            this.Platform_Windows.Size = new System.Drawing.Size(113, 26);
+            this.Platform_Windows.TabIndex = 16;
+            this.Platform_Windows.Text = "Windows";
+            this.Platform_Windows.UseVisualStyleBackColor = true;
+            // 
+            // groupBox1
+            // 
+            this.groupBox1.Controls.Add(this.Platform_Linux);
+            this.groupBox1.Controls.Add(this.Platform_Windows);
+            this.groupBox1.Location = new System.Drawing.Point(16, 282);
+            this.groupBox1.Name = "groupBox1";
+            this.groupBox1.Size = new System.Drawing.Size(374, 101);
+            this.groupBox1.TabIndex = 17;
+            this.groupBox1.TabStop = false;
+            this.groupBox1.Text = "プラットフォーム";
             // 
             // ConnectHost
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(12F, 22F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(410, 339);
-            this.Controls.Add(this.button1);
+            this.ClientSize = new System.Drawing.Size(407, 441);
+            this.Controls.Add(this.groupBox1);
+            this.Controls.Add(this.ConnectTest);
             this.Controls.Add(this.PortNo);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.Chk_Passive);
@@ -180,6 +218,8 @@
             this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "ConnectHost";
             this.Text = "接続先";
+            this.groupBox1.ResumeLayout(false);
+            this.groupBox1.PerformLayout();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -197,6 +237,9 @@
         public System.Windows.Forms.TextBox Password;
         public System.Windows.Forms.CheckBox Chk_Passive;
         public System.Windows.Forms.TextBox PortNo;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button ConnectTest;
+        private System.Windows.Forms.GroupBox groupBox1;
+        public System.Windows.Forms.RadioButton Platform_Linux;
+        public System.Windows.Forms.RadioButton Platform_Windows;
     }
 }

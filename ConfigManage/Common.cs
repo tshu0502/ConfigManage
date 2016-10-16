@@ -611,7 +611,8 @@ namespace ConfigManage
         /// <param name="filepath"></param>
         /// <returns></returns>
         //TODO 戻り値の見直しが必要
-        public byte[] FileReadByByte(string filepath) {
+        public byte[] FileReadByByte(string filepath)
+        {
             //ファイルを開く
             FileStream fs = new FileStream(
                 filepath,
@@ -647,8 +648,38 @@ namespace ConfigManage
             tvi.hItem = node.Handle;
             tvi.stateMask = NativeMethods.TVIS_OVERLAYMASK;
             tvi.state = (overlayIndex << 8);
-            NativeMethods.SendMessage(node.TreeView.Handle,NativeMethods.TVM_SETITEMW, 0, ref tvi);
+            NativeMethods.SendMessage(node.TreeView.Handle, NativeMethods.TVM_SETITEMW, 0, ref tvi);
         }
+
+        //接続切断するWin32 API を宣言
+        [DllImport("mpr.dll", EntryPoint = "WNetCancelConnection2", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        private static extern int WNetCancelConnection2(string lpName, Int32 dwFlags, bool fForce);
+
+        //認証情報を使って接続するWin32 API宣言
+        [DllImport("mpr.dll", EntryPoint = "WNetAddConnection2", CharSet = System.Runtime.InteropServices.CharSet.Unicode)]
+        private static extern int WNetAddConnection2(ref NETRESOURCE lpNetResource, string lpPassword, string lpUsername, Int32 dwFlags);
+        //WNetAddConnection2に渡す接続の詳細情報の構造体
+        [StructLayout(LayoutKind.Sequential)]
+        internal struct NETRESOURCE
+        {
+            public int dwScope;//列挙の範囲
+            public int dwType;//リソースタイプ
+            public int dwDisplayType;//表示オブジェクト
+            public int dwUsage;//リソースの使用方法
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string lpLocalName;//ローカルデバイス名。使わないならNULL。
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string lpRemoteName;//リモートネットワーク名。使わないならNULL
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string lpComment;//ネットワーク内の提供者に提供された文字列
+            [MarshalAs(UnmanagedType.LPWStr)]
+            public string lpProvider;//リソースを所有しているプロバイダ名
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+        }
+
     }
     public class TabControlEx : TabControl
     {
@@ -728,7 +759,7 @@ namespace ConfigManage
         }
 
         // WndProc
-        protected override void WndProc(ref Message m)
+ /*       protected override void WndProc(ref Message m)
         {
             base.WndProc(ref m);
             switch (m.Msg)
@@ -740,9 +771,11 @@ namespace ConfigManage
                     break;
             }
         }
+        */
     }
 }
 
+//閉じるアイコンの
 namespace Acha_ya.SampleApplication
     {
         [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Auto)]
