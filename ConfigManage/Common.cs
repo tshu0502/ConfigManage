@@ -228,6 +228,27 @@ namespace ConfigManage
                     //ダウンロード開始
                     session.GetFiles(RmtFilePath, LclFilePath);
                     TreeViewOverlayImage(treeNode, 2); //ダウンロードOKのアイコン表示
+
+                    //比較する。
+                    string RightFilePath = ((TemplateTag)treeNode.Tag).localfile_fullpath;
+
+                    Document document = new Document();
+                    Option option = new Option();
+
+                    document.Load(DocOf.LEFT, LclFilePath);
+                    document.Load(DocOf.RIGHT, RightFilePath);
+                    
+                    if (document.IsLoadedAll())
+                    {
+                        document.UpdateCompositSection(option.bIgnoreBlank);
+                        for (Section section =(Section)document.secComposit.m_head;section != null; section = (Section)section.GetNext())
+                        {
+                            if(section.state != STATE.SAME)
+                            {
+                                TreeViewOverlayImage(treeNode, 3);
+                            }
+                        }
+                    }
                 }
             }
             catch (Exception msg)
@@ -344,7 +365,7 @@ namespace ConfigManage
             TabPage myTabPage = new TabPage(Path.GetFileName(leftname));
             FnameBar fnameBar = new FnameBar(document, option);
 
-            //            view.Parent = this;
+            //            view.Parenft = this;
             view.Dock = DockStyle.Fill;
             view.Show();
 

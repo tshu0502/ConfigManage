@@ -2,11 +2,13 @@ using System;
 
 namespace csdiff
 {
-	/// <summary>
-	/// Line(s1)
+    /// <summary>
+    /// Line(s1)
     /// Line.compare(l1)
-	/// </summary>
-	public class Line : ListItem
+    /// たぶん、テキスト１行を保持する。
+    /// ListItemは継承されるだけのCLASSでリストを形成する。
+    /// </summary>
+    public class Line : ListItem
 	{
 		public ulong flags;
 		const ulong LF_HASHVALID = 2;
@@ -31,7 +33,7 @@ namespace csdiff
 		}
         
 		/// <summary>
-        /// 
+        /// 行のハッシュ値
         /// </summary>
         /// <param name="isIgnoreBlanks"></param>
         /// <returns></returns>
@@ -123,7 +125,6 @@ namespace csdiff
             return (ulong)(str.GetHashCode());
 		}
 
-
 		/// <summary>
         /// 文字列がスペース、タブ、改行かどうかチェックする。
         /// </summary>
@@ -136,8 +137,7 @@ namespace csdiff
 			str = str.TrimStart( trimChars );
 			return ( str.Length == 0 || str[0] == '\r' || str[0] == '\n' );
 		}
-
-        
+    
 		/// <summary>
         /// スペース、タブを削除する。
         /// </summary>

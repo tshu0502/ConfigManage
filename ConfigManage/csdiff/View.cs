@@ -7,7 +7,11 @@ using System.Windows.Forms;
 
 namespace csdiff
 {
-	public class LineIndex
+
+	/// <summary>
+    /// 
+    /// </summary>
+    public class LineIndex
 	{
 		public Line		m_line;
 		public STATE	m_state;

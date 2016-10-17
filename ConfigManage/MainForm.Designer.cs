@@ -303,6 +303,8 @@
             this.imageList1.Images.SetKeyName(6, "48px-Crystal_Clear_mimetype_metafont.png");
             this.imageList1.Images.SetKeyName(7, "DataConnection-Connected_1061.png");
             this.imageList1.Images.SetKeyName(8, "OK.png");
+            this.imageList1.Images.SetKeyName(9, "warnning.png");
+            this.imageList1.Images.SetKeyName(10, "Compare.png");
             // 
             // menuStrip
             // 

@@ -27,7 +27,7 @@ namespace csdiff
 
 
 	/// <summary>
-	///
+	/// 読み込んだデータのリスト群
 	/// </summary>
 	public class ListAnchor
 	{

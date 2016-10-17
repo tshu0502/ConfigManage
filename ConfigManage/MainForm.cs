@@ -38,7 +38,7 @@ namespace ConfigManage
             string[] dri = Environment.GetLogicalDrives();//ドライブ名を取得
             foreach (string d in dri)
             {
-                TreeNode childnode = new TreeNode(d, 1, 1);
+                TreeNode childnode = new TreeNode(d, 1,1);
                 childnode.Nodes.Add("..");//架空の枝を追加
                 tn.Nodes.Add(childnode);//ノードライブアイコンを設定
             }
@@ -73,11 +73,13 @@ namespace ConfigManage
             // imageList1.Image[1] のイメージをオーバーレイアイコンインデックス値1で登録
             NativeMethods.ImageList_SetOverlayImage(imageList1.Handle, 7, 1);
             NativeMethods.ImageList_SetOverlayImage(imageList1.Handle, 8, 2);
+            NativeMethods.ImageList_SetOverlayImage(imageList1.Handle, 9, 3);
+            NativeMethods.ImageList_SetOverlayImage(imageList1.Handle, 10, 4);
         }
 
-        #region　メニュー・コンテキストメニューイベント時の動作
-        //メニュー動作
-        /////////////////////////////////////////////////////////////////////////////////////
+            #region　メニュー・コンテキストメニューイベント時の動作
+            //メニュー動作
+            /////////////////////////////////////////////////////////////////////////////////////
         private void 上書き保存SToolStripMenuItem_Click(object sender, EventArgs e)
         {
             Xmlfile xf = new Xmlfile();
@@ -251,7 +253,7 @@ namespace ConfigManage
                         {
                             if (fileInfo.IsDirectory && !fileInfo.IsParentDirectory && !fileInfo.IsThisDirectory)
                             {
-                                tn2 = new TreeNode(fileInfo.Name, 3, 3);
+                                tn2 = new TreeNode(fileInfo.Name, 3,3);
                                 tn.Nodes.Add(tn2);
                                 tn2.Nodes.Add("..");
                             }
@@ -710,7 +712,6 @@ namespace ConfigManage
 
             }
         }
-
         #endregion
 
         #region LocalFileViewのイベント時の動作
@@ -1277,11 +1278,6 @@ namespace ConfigManage
 
         private void 更新ToolStripMenuItem_Click(object sender, EventArgs e)
         {
-
-        }
-
-        private void 再読込ToolStripMenuItem_Click(object sender, EventArgs e)
-        {
             //TODO Linux専用になっている
             //FocusedControlを取得する（SplitControlを取り除く）
 
@@ -1291,7 +1287,7 @@ namespace ConfigManage
             string a = "temp";
 
             //親ホストノードを取得す
-            //TODO ホストグループノードの時の条件も後で追加する
+            //TODO ホストグループノードの時の条件も追加が必要
             HostNode.Tag = HostNode.Tag ?? a;
             try
             {
@@ -1305,14 +1301,12 @@ namespace ConfigManage
                 throw;
             }
 
-
             //選択したノードが
             //ホストの場合の動作
             if (SlctNode.Tag.GetType() == typeof(LinNodeTag) || SlctNode.Tag.GetType() == typeof(WinNodeTag))
             {
                 int sessionid = ConnectHostFromTreeNode(HostNode);
                 GetFileFromNode(SlctNode, current_session[sessionid]);
-                ConfigManagerView.Update();
             }
             //テンプレートグループ場合の動作
             //TODO テンプレートグループにTagがわり当たっていないのでこの処理を通らない。
@@ -1327,6 +1321,11 @@ namespace ConfigManage
                 int sessionid = ConnectHostFromTreeNode(HostNode);
                 GetFileFromNode(SlctNode, current_session[sessionid]);
             }
+
+        }
+
+        private void 再読込ToolStripMenuItem_Click(object sender, EventArgs e)
+        {
         }
 
         private void バージョン情報AToolStripMenuItem_Click(object sender, EventArgs e)

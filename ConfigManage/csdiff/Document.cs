@@ -4,24 +4,26 @@ using System.Text;
 
 namespace csdiff
 {
+    //右or左のドキュメント
 	public enum DocOf { LEFT = 0, RIGHT = 1 };
 
 	/// <summary>
-	///
+	///比較するテキストファイル情報をロード・比較管理するCLASS
+    ///Document CLASSは比較元・先リスト・結果を管理するがListAnchorは1ファイルのみが対象）
 	/// </summary>
 	public class Document
 	{
 		public string[] fnames = new string [2]; //比較ファイル名？
 		public ListAnchor[] lines;               //リストの定義
 		//! public CFileStatus	fstat[2];
-		public ListAnchor secComposit = new ListAnchor();  //
+		public ListAnchor secComposit = new ListAnchor();  //List群の先頭と終端
 
 		public Document()
 		{
-			lines = new ListAnchor[2];                  //行群の定義
-			lines[0] = new ListAnchor();                //比較元の行群
-			lines[1] = new ListAnchor();                //比較先の行群
-		}
+			lines = new ListAnchor[2];                  
+			lines[0] = new ListAnchor();                //比較元のList群の先頭と終端
+            lines[1] = new ListAnchor();                //比較先のList群の先頭と終端
+        }
 
         //比較元先どちらもLOADされたか。
         public bool IsLoadedAll()
@@ -58,15 +60,24 @@ namespace csdiff
 		}
 
         //
-		public bool UpdateCompositSection(bool isIgnoreBlanks)
+        /// <summary>
+        /// 比較結果をsecCompositに入れる。
+        /// </summary>
+        /// <param name="isIgnoreBlanks"></param>
+        /// <returns></returns>
+        public bool UpdateCompositSection(bool isIgnoreBlanks)
 		{
 			if( !IsLoadedAll() ) return false;
-			for( int nLeftorRight=0; nLeftorRight<2; nLeftorRight++ ){
+            //nLeftorRightは右or左のドキュメントを指す。
+            for ( int nLeftorRight=0; nLeftorRight<2; nLeftorRight++ ){
+                //line.linkをすべて空にする。
 				for( Line line = (Line)lines[nLeftorRight].GetHead(); line != null; line = (Line)line.GetNext() ){
 					line.link = null;
 				}
 			}
-			secComposit.RemoveAll();
+            //比較結果のListAnchorを空にする。
+            secComposit.RemoveAll();
+            //比較結果をListAnchorに入れる。
 			compare( secComposit, lines[(int)DocOf.LEFT], lines[(int)DocOf.RIGHT], isIgnoreBlanks );
 			return true;
 		}
